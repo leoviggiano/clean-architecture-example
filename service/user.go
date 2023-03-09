@@ -18,6 +18,7 @@ type User interface {
 	Create(ctx context.Context, user *entity.User) error
 	Get(ctx context.Context, id int) (*entity.User, error)
 	Update(ctx context.Context, user *entity.User) error
+	GiveExp(ctx context.Context, user *entity.User, exp int) error
 	Delete(ctx context.Context, id int) error
 }
 
@@ -45,4 +46,15 @@ func (u user) Update(ctx context.Context, user *entity.User) error {
 
 func (u user) Delete(ctx context.Context, id int) error {
 	return u.userRepository.Delete(ctx, id)
+}
+
+func (u user) GiveExp(ctx context.Context, user *entity.User, exp int) error {
+	if user.Exp+exp > user.NextLevelExp {
+		user.Exp = 0
+		user.Level += 1
+	} else {
+		user.Exp += exp
+	}
+
+	return u.Update(ctx, user)
 }
