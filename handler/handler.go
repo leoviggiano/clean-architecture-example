@@ -1,11 +1,12 @@
 package handler
 
 import (
-	"clean/entity"
-	"clean/service"
 	"encoding/json"
 	"net/http"
 	"strconv"
+
+	"clean/entity"
+	"clean/service"
 )
 
 type Handler interface {
