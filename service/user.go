@@ -1,0 +1,48 @@
+package service
+
+import (
+	"context"
+	"errors"
+
+	"clean/entity"
+	"clean/lib/cache"
+	"clean/lib/sql"
+	"clean/service/internal/repository"
+)
+
+var (
+	ErrUserNotFound = errors.New("user not found")
+)
+
+type User interface {
+	Create(ctx context.Context, user *entity.User) error
+	Get(ctx context.Context, id int) (*entity.User, error)
+	Update(ctx context.Context, user *entity.User) error
+	Delete(ctx context.Context, id int) error
+}
+
+type user struct {
+	userRepository repository.User
+}
+
+func NewUser(db sql.Connection, cache cache.Cache) User {
+	return user{
+		userRepository: repository.NewUser(db, cache),
+	}
+}
+
+func (u user) Create(ctx context.Context, user *entity.User) error {
+	return u.userRepository.Create(ctx, user)
+}
+
+func (u user) Get(ctx context.Context, id int) (*entity.User, error) {
+	return u.userRepository.Get(ctx, id)
+}
+
+func (u user) Update(ctx context.Context, user *entity.User) error {
+	return u.userRepository.Update(ctx, user)
+}
+
+func (u user) Delete(ctx context.Context, id int) error {
+	return u.userRepository.Delete(ctx, id)
+}
