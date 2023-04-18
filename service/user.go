@@ -17,6 +17,7 @@ var (
 type User interface {
 	Create(ctx context.Context, user *entity.User) error
 	Get(ctx context.Context, id int) (*entity.User, error)
+	GetAll(ctx context.Context) ([]*entity.User, error)
 	Update(ctx context.Context, user *entity.User) error
 	GiveExp(ctx context.Context, user *entity.User, exp int) error
 	Delete(ctx context.Context, id int) error
@@ -38,6 +39,10 @@ func (u user) Create(ctx context.Context, user *entity.User) error {
 
 func (u user) Get(ctx context.Context, id int) (*entity.User, error) {
 	return u.userRepository.Get(ctx, id)
+}
+
+func (u user) GetAll(ctx context.Context) ([]*entity.User, error) {
+	return u.userRepository.GetAll(ctx)
 }
 
 func (u user) Update(ctx context.Context, user *entity.User) error {

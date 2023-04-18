@@ -3,54 +3,65 @@ package cache
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"time"
 
 	"github.com/go-redis/redis/v8"
-
-	"clean/lib/log"
+	"github.com/sirupsen/logrus"
 )
 
 type Redis struct {
 	Client  *redis.Client
 	Context context.Context
+	Logger  logrus.FieldLogger
 }
 
-func StartRedis(ctx context.Context, address string) *Redis {
+func StartRedis(ctx context.Context, address string, logger logrus.FieldLogger) *Redis {
 	return &Redis{
 		Context: ctx,
+		Logger:  logger,
 		Client: redis.NewClient(&redis.Options{
 			Addr: address,
 		}),
 	}
 }
 
-func (r *Redis) Set(key string, value interface{}, expiration ...int) error {
-	expirationTime := time.Minute * time.Duration(24*60) // 1 DAY DEFAULT
-
-	if expiration != nil {
-		expirationTime = time.Minute * time.Duration(expiration[0])
+func (r *Redis) log(log string) {
+	if r.Logger != nil {
+		r.Logger.Infof("[REDIS]: %s", log)
 	}
-
-	jsonValue, _ := json.Marshal(value)
-	err := r.Client.Set(r.Context, key, jsonValue, expirationTime).Err()
-	if err != nil {
-		log.Errorf("[Set Redis] Error in set redis [%s]:[%s]\n%s", key, value, err)
-	}
-	return err
 }
 
-func (r *Redis) Get(key string, target interface{}) (err error) {
+func (r *Redis) Set(key string, value interface{}, expiration ...time.Duration) error {
+	expirationTime := time.Hour * 24 // 1 DAY DEFAULT
+
+	if expiration != nil {
+		expirationTime = expiration[0]
+	}
+
+	r.log(fmt.Sprintf("[Set] Key: %s\nValue:\n %#v", key, value))
+
+	jsonValue, _ := json.Marshal(value)
+	return r.Client.Set(r.Context, key, jsonValue, expirationTime).Err()
+}
+
+func (r *Redis) Get(key string, target interface{}) error {
 	redisValue, err := r.Client.Get(r.Context, key).Result()
 	if err != nil {
-		return
+		return err
 	}
 
 	jsonValue := []byte(redisValue)
 	err = json.Unmarshal(jsonValue, &target)
-	return
+	if err != nil {
+		return err
+	}
+
+	r.log(fmt.Sprintf("[Get] Key: %s\nValue:\n %#v", key, target))
+	return nil
 }
 
 func (r *Redis) Delete(key string) error {
-	err := r.Client.Del(r.Context, key).Err()
-	return err
+	r.log(fmt.Sprintf("[Delete] Key: %s", key))
+	return r.Client.Del(r.Context, key).Err()
 }

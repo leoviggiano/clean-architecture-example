@@ -6,8 +6,7 @@ import (
 	"regexp"
 
 	"github.com/jmoiron/sqlx"
-
-	"clean/lib/log"
+	"github.com/sirupsen/logrus"
 )
 
 var (
@@ -16,7 +15,8 @@ var (
 )
 
 type Wrapper struct {
-	DB *sqlx.DB
+	DB     *sqlx.DB
+	Logger logrus.FieldLogger
 }
 
 func (w Wrapper) DriverName() string {
@@ -32,7 +32,9 @@ func (w Wrapper) BindNamed(s string, i interface{}) (string, []interface{}, erro
 }
 
 func (w Wrapper) log(query string, args ...interface{}) {
-	log.Infof("[POSTGRES] %s %v", space.ReplaceAllString(query, " "), args)
+	if w.Logger != nil {
+		w.Logger.Infof("[POSTGRES] %s %v", space.ReplaceAllString(query, " "), args)
+	}
 }
 
 func (w Wrapper) Close() error {

@@ -1,5 +1,8 @@
 -- name: create
-INSERT INTO users (id, username) VALUES ($1, $2);
+INSERT INTO users (name) VALUES ($1);
+
+-- name: get-all
+SELECT id, name, exp, level, next_level_exp, created_at FROM users;
 
 -- name: update
 UPDATE users SET
