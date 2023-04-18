@@ -25,7 +25,7 @@ O repositório conta com uma collection no Insomnia/Postman com os endpoints: [c
 
 É possível identificá-los no código:
 
-> [cmd/app/app.go](/cmd/app/app.go)
+> [cmd/app/app.go](/cmd/app/app.go#L43-L47)
 
 ### Create
 
