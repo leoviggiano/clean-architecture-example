@@ -25,7 +25,7 @@ O repositório conta com uma collection no Insomnia/Postman com os endpoints: [c
 
 É possível identificá-los no código:
 
-> cmd/app/app.go
+> [cmd/app/app.go](/cmd/app/app.go)
 
 ### Create
 
@@ -64,10 +64,10 @@ r.HandleFunc("/delete-user", handler.DeleteUser)
 1. É necessário que tenha criado a tabela `users`
 
    ```sh
-    $ make migrate
+   make migrate
    ```
 
 2. Se já foi rodado a migração, rode o projeto com o comando:
    ```sh
-   $ make run
+   make run
    ```
