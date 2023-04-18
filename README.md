@@ -1,8 +1,8 @@
 # Exemplo de Clean Architecture - GO
 
-- [Objetivo](#objetivo)
-- [Endpoints](#endpoints)
-- [Configurando o projeto](#configurando-o-projeto)
+1. [Objetivo](#objetivo)
+2. [Endpoints](#endpoints)
+3. [Configurando o projeto](#configurando-o-projeto)
 
 ## Objetivo
 
@@ -21,7 +21,7 @@ Esse projeto possui:
 
 Existem 5 endpoints que representam o mais básico CRUD (Create, Read, Update, Delete) para a demonstração do projeto.
 
-O repositório conta com uma collection no Insomnia/Postman com os endpoints: [collection.json](/blob/main/docs/collection.json)
+O repositório conta com uma collection no Insomnia/Postman com os endpoints: [collection.json](/docs/collection.json)
 
 É possível identificá-los no código:
 
