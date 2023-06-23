@@ -14,3 +14,7 @@ type User struct {
 
 	Created time.Time `db:"created_at"`
 }
+
+func (u *User) Empty() bool {
+	return u == nil && (u.ID == 0 && u.Name == "")
+}

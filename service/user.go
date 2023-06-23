@@ -1,3 +1,5 @@
+//go:generate go run github.com/golang/mock/mockgen -package=mocks -source=$GOFILE  -destination=../testdata/mocks/user.go
+
 package service
 
 import (
@@ -6,6 +8,7 @@ import (
 
 	"clean/entity"
 	"clean/lib/cache"
+	"clean/lib/log"
 	"clean/lib/sql"
 	"clean/service/internal/repository"
 )
@@ -25,16 +28,25 @@ type User interface {
 
 type user struct {
 	userRepository repository.User
+	log            log.Logger
 }
 
-func NewUser(db sql.Connection, cache cache.Cache) User {
+func NewUser(db sql.Connection, cache cache.Cache, logger log.Logger) User {
 	return user{
 		userRepository: repository.NewUser(db, cache),
+		log:            logger,
 	}
 }
 
 func (u user) Create(ctx context.Context, user *entity.User) error {
-	return u.userRepository.Create(ctx, user)
+	err := u.userRepository.Create(ctx, user)
+	if err != nil {
+		u.log.Errorf("error when creating user:", err.Error())
+		return err
+	}
+
+	u.log.Infof("user created: %s", user.Name)
+	return err
 }
 
 func (u user) Get(ctx context.Context, id int) (*entity.User, error) {

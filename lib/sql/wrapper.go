@@ -6,7 +6,8 @@ import (
 	"regexp"
 
 	"github.com/jmoiron/sqlx"
-	"github.com/sirupsen/logrus"
+
+	"clean/lib/log"
 )
 
 var (
@@ -16,7 +17,7 @@ var (
 
 type Wrapper struct {
 	DB     *sqlx.DB
-	Logger logrus.FieldLogger
+	Logger log.Logger
 }
 
 func (w Wrapper) DriverName() string {

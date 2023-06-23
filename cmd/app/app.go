@@ -35,7 +35,7 @@ func main() {
 
 	cache := cache.StartRedis(ctx, config.RedisAddress(), log)
 
-	services := service.GetAll(db, cache)
+	services := service.GetAll(db, cache, log)
 	handler := handler.NewHandler(services, log)
 
 	r := http.NewServeMux()

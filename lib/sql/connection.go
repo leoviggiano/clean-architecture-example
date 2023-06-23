@@ -8,7 +8,8 @@ import (
 
 	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq" // Postgres dependency
-	"github.com/sirupsen/logrus"
+
+	"clean/lib/log"
 )
 
 type Connection interface {
@@ -28,7 +29,7 @@ type Settings struct {
 	ConnMaxLifetime time.Duration
 }
 
-func NewConnection(settings Settings, logger logrus.FieldLogger) (Connection, error) {
+func NewConnection(settings Settings, logger log.Logger) (Connection, error) {
 	db, err := sqlx.Connect("postgres", settings.Conn)
 	if err != nil {
 		return nil, err

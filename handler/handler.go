@@ -5,9 +5,8 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/sirupsen/logrus"
-
 	"clean/entity"
+	"clean/lib/log"
 	"clean/service"
 )
 
@@ -21,10 +20,10 @@ type Handler interface {
 
 type handler struct {
 	services service.All
-	logger   logrus.FieldLogger
+	logger   log.Logger
 }
 
-func NewHandler(services service.All, logger logrus.FieldLogger) Handler {
+func NewHandler(services service.All, logger log.Logger) Handler {
 	return handler{services, logger}
 }
 
@@ -44,6 +43,7 @@ func (h handler) CreateUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	h.logger.Infof("user created: %s", user.Name)
 	w.WriteHeader(http.StatusCreated)
 }
 

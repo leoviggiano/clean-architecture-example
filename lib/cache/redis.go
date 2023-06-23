@@ -7,16 +7,17 @@ import (
 	"time"
 
 	"github.com/go-redis/redis/v8"
-	"github.com/sirupsen/logrus"
+
+	"clean/lib/log"
 )
 
 type Redis struct {
 	Client  *redis.Client
 	Context context.Context
-	Logger  logrus.FieldLogger
+	Logger  log.Logger
 }
 
-func StartRedis(ctx context.Context, address string, logger logrus.FieldLogger) *Redis {
+func StartRedis(ctx context.Context, address string, logger log.Logger) *Redis {
 	return &Redis{
 		Context: ctx,
 		Logger:  logger,
